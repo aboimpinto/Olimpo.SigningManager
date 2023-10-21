@@ -54,7 +54,18 @@ public class SigningKeys
         var privateKey = keyPair.Private as ECPrivateKeyParameters;
         var publicKey = keyPair.Public as ECPublicKeyParameters;
 
-        return (ToHex(privateKey.D.ToByteArrayUnsigned()), ToHex(publicKey.Q.GetEncoded()));
+        if (privateKey == null || publicKey == null)
+        {
+            throw new InvalidOperationException("Could not create keys");
+        }
+        else if (privateKey.D == null || publicKey.Q == null)
+        {
+            throw new InvalidOperationException("Could not create keys");
+        }
+        else
+        {
+            return (ToHex(privateKey.D.ToByteArrayUnsigned()), ToHex(publicKey.Q.GetEncoded()));
+        }
     }
 
     private static AsymmetricKeyParameter GetPrivateKeyFromHex(string privateKeyString)
